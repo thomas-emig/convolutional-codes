@@ -1,0 +1,4 @@
+build/*
+reading/*
+*.asv
+*.png
