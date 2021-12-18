@@ -20,9 +20,6 @@ add_executable(
 	common/encoder.c
 	hard-decision/viterbi-decoder.c
 #	hard-decision/stack-decoder.c
-# experimental and non-functioning
-# The fano decoder might work, if we find the right bit metrics.
-#	hard-decision/sequential-decoder.c
 #	hard-decision/fano-decoder.c
 )
 

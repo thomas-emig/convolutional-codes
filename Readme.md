@@ -1,5 +1,9 @@
 # Experiments with convolutional codes
 
+This software is intended to demonstrate different decoding techniques for convolutional codes. The encoder and decoder implementations contained in this repository are very flexible but at the same time not very efficient.
+
+Instead of the correct metrics, the decoder in these examples use metrics which were found to produce good results. For soft-decision decoding, metrics based on the quadratic distance to the expected symbol is used.
+
 ## Build:
 
 - `mkir build && cd build`
