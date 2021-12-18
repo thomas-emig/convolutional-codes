@@ -19,7 +19,7 @@ struct path {
 
 struct decoder {
     struct code_param parameter;
-    int (*output_callback) (uint8_t* data, uint8_t len, uint16_t path_metric, void* userdata);
+    callback_t output_callback;
 
     uint8_t* input_symbols;
     uint8_t input_symbol_write_index;
@@ -66,7 +66,7 @@ void decoder_destroy(struct decoder** obj) {
     }
 }
 
-void decoder_register_callback(struct decoder* obj, int (*output_callback) (uint8_t* data, uint8_t len, uint16_t path_metric, void* userdata)) {
+void decoder_register_callback(struct decoder* obj, callback_t output_callback) {
     obj->output_callback = output_callback;
 }
 

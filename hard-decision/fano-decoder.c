@@ -26,7 +26,7 @@ struct node {
 
 struct decoder {
     struct code_param parameter;
-    int (*output_callback) (uint8_t* data, uint8_t len, uint16_t path_metric, void* userdata);
+    callback_t output_callback;
 
     // fano parameter
     struct node* current_node; // currently examined symbol
@@ -41,6 +41,7 @@ struct decoder {
     // output buffer
     uint8_t bufsize;           // output buffer size
     uint8_t* decoded_path;
+    int32_t metric;            // final path metric
 };
 
 static int receive_symbol(struct decoder* obj, uint8_t received_symbol);
@@ -67,7 +68,7 @@ void decoder_destroy(struct decoder** obj) {
     check_and_delete((void**)obj);
 }
 
-void decoder_register_callback(struct decoder* obj, int (*output_callback) (uint8_t* data, uint8_t len, uint16_t path_metric, void* userdata)) {
+void decoder_register_callback(struct decoder* obj, callback_t output_callback) {
     obj->output_callback = output_callback;
 }
 
@@ -176,6 +177,7 @@ static int receive_symbol(struct decoder* obj, uint8_t received_symbol) {
             obj->current_node++;
             if (obj->current_node == obj->nodes + obj->blocklen_w_tail) {
                 // all block symbols are decoded
+                obj->metric = obj->nodes[obj->input_counter - 1].metric;
                 return output_data(obj);
             }
             obj->current_node->state = cnode->successor_states[cnode->selected_path];
@@ -243,6 +245,7 @@ static int receive_symbol(struct decoder* obj, uint8_t received_symbol) {
     }
 
     // reached timeout - ignore further input until block length reached
+    obj->metric = obj->nodes[obj->input_counter - 1].metric;
     if (obj->input_counter == obj->blocklen_w_tail) {
         return output_data(obj);
     }
@@ -315,7 +318,7 @@ static int output_data(struct decoder* obj) {
         res = obj->output_callback(
             obj->decoded_path,
             obj->parameter.block_len,
-            0, // TODO: return metric
+            obj->metric,
             obj->parameter.userdata
         );
     }

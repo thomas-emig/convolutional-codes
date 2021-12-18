@@ -16,7 +16,7 @@ struct data {
     struct decoder* decoder;
     int32_t channel_error_rate; // The transmission error probability in 10^(-6)
     uint8_t symbol_length;
-    uint64_t metric_acc;
+    int64_t metric_acc;
     uint64_t error_acc;
     uint8_t wr_ptr;
     uint8_t data[265];
@@ -71,7 +71,7 @@ int data_callback_encoded(uint8_t* data, uint8_t len, void* userdata) {
     return -1; // delete data
 }
 
-int data_callback_decoded(uint8_t* data, uint8_t len, uint16_t path_metric, void* userdata) {
+int data_callback_decoded(uint8_t* data, uint8_t len, int32_t path_metric, void* userdata) {
     struct data* pdata = (struct data*) userdata;
 
     if (pdata->wr_ptr != (len + 7) / 8) {
