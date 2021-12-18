@@ -1,5 +1,5 @@
 /*
-*  Example demonstrating the different decoder implementations for decoding convolutional codes
+*  Example demonstrating the different decoder implementations for decoding of convolutional codes
 */
 
 #include <stdio.h>
@@ -145,8 +145,17 @@ int main(void) {
         // 800.000.000 bit = 16.000.000 * 50 bit
         // 800.000.000 bit = 20.000.000 * 40 bit
         int numblocks = 20000000;
+        if (userdata.channel_error_rate > 12500) {
+            numblocks /= 10;
+        }
+        if (userdata.channel_error_rate > 50000) {
+            numblocks /= 10;
+        }
+        if (userdata.channel_error_rate > 200000) {
+            numblocks /= 10;
+        }
         for (int k = 0; k < numblocks; ++k) {
-            if (k % 1024 == 0) {
+            if (k % 128 == 0) {
                 printf("Calculating... %3d%%\r", (k*100)/numblocks);
                 fflush(stdout);
             }
@@ -164,7 +173,7 @@ int main(void) {
         printf("\n");
 
         // error analysis
-        printf("Overall transmission error rate: %lf\n", ((double)userdata.error_acc)/((double)num_bits_transmitted));
+        printf("Overall transmission error rate: %.8lf\n", ((double)userdata.error_acc)/((double)num_bits_transmitted));
     }
 
     encoder_destroy(&encoder);
