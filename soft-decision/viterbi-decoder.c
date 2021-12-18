@@ -22,7 +22,7 @@ struct decoder {
     struct state* state_matrix;
     float* state_metrics;
     uint8_t* output_data;
-    int (*output_callback) (uint8_t* data, uint8_t len, void* userdata);
+    callback_t output_callback;
 };
 
 static void get_transition_metric(struct decoder* obj,
@@ -205,7 +205,7 @@ int decoder_init(struct decoder* obj, struct code_param* param) {
     return 0;
 }
 
-void decoder_register_callback(struct decoder* obj, int (*output_callback) (uint8_t* data, uint8_t len, void* userdata)) {
+void decoder_register_callback(struct decoder* obj, callback_t output_callback) {
     obj->output_callback = output_callback;
 }
 

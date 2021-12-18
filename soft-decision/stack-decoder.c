@@ -20,7 +20,7 @@ struct path {
 
 struct decoder {
     struct code_param parameter;
-    int (*output_callback) (uint8_t* data, uint8_t len, void* userdata);
+    callback_t output_callback;
 
     float* input_symbols; // stores blocklen (inc. tail) * numsymbols distance values to the actually received symbols
     uint16_t input_symbol_write_index;
@@ -67,7 +67,7 @@ void decoder_destroy(struct decoder** obj) {
     }
 }
 
-void decoder_register_callback(struct decoder* obj, int (*output_callback) (uint8_t* data, uint8_t len, void* userdata)) {
+void decoder_register_callback(struct decoder* obj, callback_t output_callback) {
     obj->output_callback = output_callback;
 }
 
