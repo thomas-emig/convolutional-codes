@@ -12,6 +12,7 @@ struct demapper {
     uint8_t output_data_len;
     void* userdata;
     int (*output_callback) (float* data, uint8_t len, void* userdata);
+    float ndist;   // min squared distance between symbols
 };
 
 struct demapper* demapper_create(void) {
@@ -38,6 +39,11 @@ int demapper_init(struct demapper* obj, struct code_param* param) {
     obj->constellation = get_constellation(param->symlen_out);
     obj->userdata = param->userdata;
 
+    // calculate min squared distance between symbols (assuming symbols are all have the same distance)
+    float dx = obj->constellation[0] - obj->constellation[2];
+    float dy = obj->constellation[1] - obj->constellation[3];
+    obj->ndist = (dx*dx) + (dy*dy);
+
     if (obj->output_data == NULL) {
         obj->output_data = (float*) malloc(obj->output_data_len * sizeof(float));
     }
@@ -60,7 +66,7 @@ int demapper_input(struct demapper* obj, float* data, uint8_t len) {
         for (uint8_t k = 0; k < obj->output_data_len; ++k) {
             float dx = data[i] - obj->constellation[2*k];
             float dy = data[i+1] - obj->constellation[(2*k)+1];
-            obj->output_data[k] = (dx*dx) + (dy*dy);
+            obj->output_data[k] = ((dx*dx) + (dy*dy)) / obj->ndist;
         }
 
         int res = -1;
