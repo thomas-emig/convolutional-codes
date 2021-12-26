@@ -124,13 +124,16 @@ int data_callback_demapped(float* data, uint8_t len, void* userdata) {
 int main(void) {
     srand(time(NULL)); // use current time as seed for random generator
 
+    // Eb/N0 in dB
     float snr_db_values[] = {
-        0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0, 20.0
+        0.0, 2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0//, 16.0, 18.0, 20.0
     };
     // scaling factors are computed using following formula:
-    // s = 10^(-SNRdb/20)
+    // s = 1/sqrt(2) * 10^(-SNRdb/20) // SNRdb is the bit energy to noise ratio Eb/N0
     float noise_scaling_factors[] = {
-        1.0000, 0.7943, 0.6310, 0.5012, 0.3981, 0.3162, 0.2512, 0.1995, 0.1585, 0.1259, 0.1000
+        0.707106781186548, 0.561674881261479, 0.446154216921401, 0.354392891541971,
+        0.281504279937367, 0.223606797749979, 0.177617192929090, 0.141086351316046,
+        //0.112068872384565, 0.089019469568772, 0.070710678118655
     };
     int num_scaling_factors = sizeof(noise_scaling_factors) / sizeof(noise_scaling_factors[0]);
 
@@ -144,6 +147,11 @@ int main(void) {
     userdata.wr_ptr = 0;
     userdata.scaling = 1.0;
 
+    // convert from Es/N0 to Eb/N0
+    for (int i = 0; i < num_scaling_factors; ++i) {
+        noise_scaling_factors[i] *= 1.0 / sqrt(userdata.parameter.symlen_out);
+    }
+
     (void) mapper_init(userdata.mapper, &(userdata.parameter));
     mapper_register_callback(userdata.mapper, data_callback_mapped);
 
@@ -155,13 +163,11 @@ int main(void) {
         userdata.scaling = noise_scaling_factors[i];
 
         printf("====================================================\n");
-        printf("Channel SNR: %fdB\n", snr_db_values[i]);
+        printf("Eb/N0: %fdB\n", snr_db_values[i]);
 
         userdata.error_acc = 0;
 
         int num_bits_transmitted = 0;
-        // 800.000.000 bit = 16.000.000 * 50 bit
-        // 800.000.000 bit = 20.000.000 * 40 bit
         int numbits    = 800000000;
         int numsymbols = numbits / userdata.parameter.symlen_out;
         for (int k = 0; k < numsymbols; ++k) {
