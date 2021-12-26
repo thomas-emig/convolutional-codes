@@ -143,7 +143,7 @@ int data_callback_decoded(uint8_t* data, uint8_t len, void* userdata) {
     return -1; // delete data
 }
 
-int main(void) {
+int main(int argc, char** argv) {
     srand(time(NULL)); // use current time as seed for random generator
 
     // Eb/N0 in dB
@@ -163,7 +163,11 @@ int main(void) {
 
     struct data userdata;
 
-    get_code(0, &(userdata.parameter));
+    int code_idx = 0;
+    if (argc > 1) {
+        code_idx = atoi(argv[1]);
+    }
+    get_code(code_idx, &(userdata.parameter));
 
     userdata.encoder  = encoder_create();
     userdata.mapper   = mapper_create();
@@ -195,13 +199,15 @@ int main(void) {
         userdata.error_acc = 0;
 
         int num_bits_transmitted = 0;
-        // 800.000.000 bit = 16.000.000 * 50 bit
-        // 800.000.000 bit = 20.000.000 * 40 bit
-        int numblocks = 20000000;
+        int numblocks = 800000000 / userdata.parameter.block_len;
+        if (snr_db_values[i] <= 4.0) {
+            numblocks /= 10;
+        }
         if (snr_db_values[i] <= 6.0) {
-            numblocks = 200000;
-        } else if (snr_db_values[i] <= 12.0) {
-            numblocks = 2000000;
+            numblocks /= 10;
+        }
+        if (snr_db_values[i] <= 10.0) {
+            numblocks /= 10;
         }
         for (int k = 0; k < numblocks; ++k) {
             if (k % 1024 == 0) {
