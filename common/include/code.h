@@ -14,5 +14,6 @@ struct code_param {
     int32_t* bit_metrics; // 0: metric correct bit, 1: metric wrong bit - used for hard-decision stack decoding
     int32_t* fano_bit_metrics; // bit metrics for hard-decision fano decoder (not the actual fano metric)
     float metric_weight;  // weight factor for squared distance metric used by soft-decision stack decoder
+    float fano_metric_weight; // weight factor for squared distance metric used by soft-decision stack decoder (not the actual fano metric)
     void* userdata;
 };
