@@ -42,6 +42,7 @@ add_executable(
 	common/gaussian.c
 	soft-decision/viterbi-decoder.c
 #	soft-decision/stack-decoder.c
+#	soft-decision/fano-decoder.c
 )
 
 target_include_directories(
