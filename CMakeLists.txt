@@ -13,26 +13,26 @@ include_directories(
 )
 
 add_executable(
-	hard-decision-simulation
+	binary-symmetric-simulation
 
-	hard-decision/main.c
+	binary-symmetric-channel/main.c
 	common/codebook.c
 	common/encoder.c
-	hard-decision/viterbi-decoder.c
-#	hard-decision/stack-decoder.c
-#	hard-decision/fano-decoder.c
+	binary-symmetric-channel/viterbi-decoder.c
+#	binary-symmetric-channel/stack-decoder.c
+#	binary-symmetric-channel/fano-decoder.c
 )
 
 target_include_directories(
-	hard-decision-simulation PRIVATE
+	binary-symmetric-simulation PRIVATE
 
-	hard-decision/include/
+	binary-symmetric-channel/include/
 )
 
 add_executable(
-	soft-decision-simulation
+	awgn-simulation
 
-	soft-decision/main.c
+	AWGN-channel/main.c
 	common/codebook.c
 	common/encoder.c
 	common/constellations.c
@@ -40,19 +40,19 @@ add_executable(
 	common/demapper.c
 #	common/hard-demapper.c
 	common/gaussian.c
-	soft-decision/viterbi-decoder.c
-#	soft-decision/stack-decoder.c
-#	soft-decision/fano-decoder.c
+	AWGN-channel/viterbi-decoder.c
+#	AWGN-channel/stack-decoder.c
+#	AWGN-channel/fano-decoder.c
 )
 
 target_include_directories(
-	soft-decision-simulation PRIVATE
+	awgn-simulation PRIVATE
 
-	soft-decision/include/
+	AWGN-channel/include/
 )
 
 target_link_libraries(
-	soft-decision-simulation
+	awgn-simulation
 
 	m
 )

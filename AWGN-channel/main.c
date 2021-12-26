@@ -1,5 +1,5 @@
 /*
-*  Example demonstrating the different decoder implementations for soft decision decoding of convolutional codes
+*  Example demonstrating different decoder implementations for decoding of convolutional codes on the AWGN channel
 */
 
 #include <stdio.h>

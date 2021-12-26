@@ -1,5 +1,5 @@
 /*
-*  Example demonstrating the different decoder implementations for decoding of convolutional codes
+*  Example demonstrating different decoder implementations for hard-decision decoding of convolutional codes on the binary symmetric channel
 */
 
 #include <stdio.h>

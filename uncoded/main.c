@@ -1,5 +1,5 @@
 /*
-*  Example demonstrating uncoded data transmission
+*  Example demonstrating uncoded data transmission on the AWGN channel
 */
 
 #include <stdio.h>
