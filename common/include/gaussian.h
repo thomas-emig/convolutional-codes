@@ -1,4 +1,4 @@
 #pragma once
 
-extern const float pregenerated[1024];
-extern const unsigned int num_elements_pregenerated;
+// returns one random variable from N(0, 1)
+double gengauss(void);

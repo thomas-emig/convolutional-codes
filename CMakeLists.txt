@@ -50,6 +50,12 @@ target_include_directories(
 	soft-decision/include/
 )
 
+target_link_libraries(
+	soft-decision-simulation
+
+	m
+)
+
 add_executable(
 	uncoded-simulation
 
@@ -59,4 +65,10 @@ add_executable(
 	common/mapper.c
 	common/demapper.c
 	common/gaussian.c
+)
+
+target_link_libraries(
+	uncoded-simulation
+
+	m
 )

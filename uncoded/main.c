@@ -82,7 +82,7 @@ int data_callback_mapped(float* data, uint8_t len, void* userdata) {
 
     // add gaussian noise
     for (uint8_t i = 0; i < len; ++i) {
-        data[i] += pdata->scaling * pregenerated[rand() % num_elements_pregenerated];
+        data[i] += pdata->scaling * gengauss();
     }
 
     (void) demapper_input(pdata->demapper, data, len);
