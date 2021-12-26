@@ -67,8 +67,15 @@ static uint8_t blocklength[] = {
     40, 40, 40, 40, 50, 40
 };
 
+// optimized for 8.0 dB (Eb/N0)
 static float metric_weigths[] = {
-    -6.5, -14.5, -14.0, -12.5, -6.0, -10.0
+    -15.0, -15.0, -20, -16.0, -7.0, -7.0
+};
+
+// optimized for 8.0 dB (Eb/N0)
+// WSPR code optimized for 6.0 dB
+static float fmetric_weigths[] = {
+    -200.0, -150.0, -130.0, -110.0, -11.0, -70.0
 };
 
 static uint64_t* polynomials[] = {
@@ -80,6 +87,7 @@ static uint64_t* polynomials[] = {
     polynomials6
 };
 
+// optimized for crossover probability p = 0.01
 static int32_t* bit_metrics[] = {
     metrics1,
     metrics2,
@@ -89,6 +97,7 @@ static int32_t* bit_metrics[] = {
     metrics6
 };
 
+// optimized for crossover probability p = 0.01
 static int32_t* fmetrics[] = {
     fmetrics1,
     fmetrics2,
@@ -106,5 +115,6 @@ void get_code(uint8_t index, struct code_param* parameter) {
     parameter->bit_metrics = bit_metrics[index];
     parameter->fano_bit_metrics = fmetrics[index];
     parameter->metric_weight = metric_weigths[index];
+    parameter->fano_metric_weight = fmetric_weigths[index];
     parameter->userdata = NULL;
 }
