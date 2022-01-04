@@ -13,6 +13,11 @@
 
 #define TIMEOUT 10000 // decoder timeout in cycles per decoded bit
 #define DELTA   17    // stepsize for threshold adjustment
+//#define VERBOSE       // print decoder state
+
+#ifdef VERBOSE
+    #include <stdio.h>
+#endif
 
 struct node {
     uint64_t state;
@@ -160,12 +165,22 @@ static int receive_symbol(struct decoder* obj, uint8_t received_symbol) {
     }
 
     while (obj->timeout != 0) {
+#ifdef VERBOSE
+        printf("Evaluating current node at level %ld, metric %d\n", cnode - obj->nodes, cnode->metric);
+        printf("Transitions: [0] -> state %ld, transition metric %d; [1] -> state %ld, transition metric %d\n",
+            cnode->successor_states[0], cnode->transition_metrics[0], cnode->successor_states[1], cnode->transition_metrics[1]);
+        printf("Selected transition: %d\n", cnode->selected_path);
+#endif
+
         obj->timeout--;
 
         // compute successor metric
         int32_t ms = cnode->metric + cnode->transition_metrics[cnode->selected_path];
 
         if (ms >= obj->metric_threshold) {
+#ifdef VERBOSE
+            printf("Ms >= T: moving forward\n");
+#endif
             // tightening
             if (cnode->metric < (obj->metric_threshold + obj->delta)) {
                 while (ms >= obj->metric_threshold + obj->delta) {
@@ -220,6 +235,9 @@ static int receive_symbol(struct decoder* obj, uint8_t received_symbol) {
 
                 // if we can not move back, relax threshold
                 if ((cnode == obj->nodes) || (pnode->metric < obj->metric_threshold)) {
+#ifdef VERBOSE
+                    printf("Ms < T: can not move back - relax T\n");
+#endif
                     obj->metric_threshold -= obj->delta;
 
                     // start again with search from path 0
@@ -229,6 +247,9 @@ static int receive_symbol(struct decoder* obj, uint8_t received_symbol) {
                     }
                     break;
                 } else {
+#ifdef VERBOSE
+                    printf("Ms < T: moving back\n");
+#endif
                     // move back
                     obj->current_node = pnode;
                     cnode = pnode;
