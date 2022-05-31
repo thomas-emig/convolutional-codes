@@ -17,3 +17,8 @@ To use different demapper (e.g. soft vs. hard demapper) and decoder (viterbi or 
 The build produces three binaries, one for hard decision simulation on a binary symmetric channel (`binary-symmetric-simulation`), one for soft or hard decision simulation on the AWGN channel (`awgn-simulation`) and one for uncoded transmission on the AWGN channel (`uncoded-simulation`).
 
 Code parameter can be added/edited in `common/codebook.c` and symbol mapping in `common/constellations.c`.
+
+## Further Information
+
+- Slides of the presentation to this project can be found at [https://thomas-emig.de/data/faltungscodes-kurz.pdf] and [https://thomas-emig.de/data/faltungscodes-lang.pdf].
+- A very good source of information is Phil Karn's Website [http://www.ka9q.net].
